@@ -56,7 +56,7 @@ class UserControllerIntegrationTest {
     @Test
     void getUserById_works() throws Exception {
         mvc.perform(get("/api/v1/users/{id}", userId))
-           .andExpect(status().isOk())
+        .andExpect(status().isOk())
            .andExpect(jsonPath("$.email").value(createdEmail)); // <- use unique email
     }
 
@@ -64,8 +64,8 @@ class UserControllerIntegrationTest {
     void me_get_put_delete_flow() throws Exception {
         // GET /me
         mvc.perform(get("/api/v1/me").header("X-User-Id", userId))
-           .andExpect(status().isOk())
-           .andExpect(jsonPath("$.firstName").value("Alice"));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.firstName").value("Alice"));
 
         // PUT /me (update firstName)
         var upd = new UpdateUserDTO();
