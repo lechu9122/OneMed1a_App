@@ -1,15 +1,9 @@
-package com.onemed1a.backend.service;
+package com.onemed1a.backend.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.onemed1a.backend.dto.CreateUserDTO;
-import com.onemed1a.backend.dto.UpdateUserDTO;
-import com.onemed1a.backend.dto.UserDTO;
-import com.onemed1a.backend.entity.User;
-import com.onemed1a.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +12,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class UserService {
 
+    private static final String USER_NOT_FOUND = "User not found";
+
     private final UserRepository repo;
 
     public UserDTO create(CreateUserDTO dto) {
-        // Optional: surface a friendly 409 instead of raw DB constraint error
         if (repo.existsByEmail(dto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
@@ -40,11 +35,10 @@ public class UserService {
 
     public UserDTO getById(Long id) {
         User user = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         if (!user.isActive()) {
-            // Hide inactive users from normal reads
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND);
         }
 
         return map(user);
@@ -56,11 +50,10 @@ public class UserService {
 
     public UserDTO updateProfile(Long id, UpdateUserDTO dto) {
         User user = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         if (!user.isActive()) {
-            // Do not allow updates to inactive users
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND);
         }
 
         if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
@@ -73,7 +66,7 @@ public class UserService {
 
     public void deactivate(Long id) {
         User user = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND));
 
         if (!user.isActive()) {
             return; // already inactive; treat as idempotent
@@ -81,10 +74,6 @@ public class UserService {
 
         user.setActive(false);
         repo.save(user);
-
-        // NOTE: Keep the user's data for a 30-day grace period
-        // after deactivation (for recovery/audit). After that, a scheduled job would
-        // permanently delete the user's data.
     }
 
     // ---- mapping ----

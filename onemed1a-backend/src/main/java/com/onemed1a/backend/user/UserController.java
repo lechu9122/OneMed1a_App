@@ -1,4 +1,4 @@
-package com.onemed1a.backend.controller;
+package com.onemed1a.backend.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.onemed1a.backend.dto.CreateUserDTO;
-import com.onemed1a.backend.dto.UpdateUserDTO;
-import com.onemed1a.backend.dto.UserDTO;
-import com.onemed1a.backend.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

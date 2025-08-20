@@ -1,6 +1,7 @@
-package com.onemed1a.backend.controller;
+package com.onemed1a.backend.user;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,16 +14,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onemed1a.backend.dto.CreateUserDTO;
-import com.onemed1a.backend.dto.UpdateUserDTO;
-import com.onemed1a.backend.entity.User.Gender;
-import com.onemed1a.backend.repository.UserRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,19 +31,21 @@ class UserControllerIntegrationTest {
     @Autowired UserRepository repo;
 
     Long userId;
-    String createdEmail;   // <- keep for later assertions
+    String createdEmail;
 
     @BeforeEach
     void setup() throws Exception {
-        createdEmail = "alice+" + java.util.UUID.randomUUID() + "@example.com"; // UNIQUE
-        var body = new CreateUserDTO("Alice", "Ng", createdEmail,
-                Gender.UNSPECIFIED, LocalDate.of(2001, 7, 15));
+        createdEmail = "alice+" + UUID.randomUUID() + "@example.com";
+
+        CreateUserDTO body = new CreateUserDTO(
+                "Alice", "Ng", createdEmail,
+                User.Gender.UNSPECIFIED, LocalDate.of(2001, 7, 15));
 
         var result = mvc.perform(post("/api/v1/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(body)))
-            .andExpect(status().isCreated())
-            .andReturn();
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(body)))
+                .andExpect(status().isCreated())
+                .andReturn();
 
         var json = om.readTree(result.getResponse().getContentAsString());
         userId = json.get("id").asLong();
@@ -54,32 +53,27 @@ class UserControllerIntegrationTest {
     }
 
     @Test
-    void getUserById_works() throws Exception {
+    void getUserById_returnsCreatedUser() throws Exception {
         mvc.perform(get("/api/v1/users/{id}", userId))
         .andExpect(status().isOk())
-           .andExpect(jsonPath("$.email").value(createdEmail)); // <- use unique email
+        .andExpect(jsonPath("$.email").value(createdEmail));
     }
 
     @Test
-    void me_get_put_delete_flow() throws Exception {
-        // GET /me
-        mvc.perform(get("/api/v1/me").header("X-User-Id", userId))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.firstName").value("Alice"));
-
-        // PUT /me (update firstName)
-        var upd = new UpdateUserDTO();
+    void update_then_delete_flow() throws Exception {
+        // PATCH /users/{id}
+        UpdateUserDTO upd = new UpdateUserDTO();
         upd.setFirstName("Alicia");
 
-        mvc.perform(put("/api/v1/me")
-                .header("X-User-Id", userId)
+        mvc.perform(patch("/api/v1/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(upd)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Alicia"));
 
-        // DELETE /me
-        mvc.perform(delete("/api/v1/me").header("X-User-Id", userId)).andExpect(status().isNoContent());
+        // DELETE /users/{id}
+        mvc.perform(delete("/api/v1/users/{id}", userId))
+        .andExpect(status().isNoContent());
 
         // Verify deactivated in DB
         var entity = repo.findById(userId).orElseThrow();

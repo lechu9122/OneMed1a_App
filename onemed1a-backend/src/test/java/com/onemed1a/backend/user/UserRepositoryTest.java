@@ -1,4 +1,4 @@
-package com.onemed1a.backend.repository;
+package com.onemed1a.backend.user;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.onemed1a.backend.entity.User;
-import com.onemed1a.backend.entity.User.Gender;
+import com.onemed1a.backend.user.User.Gender;
 
 @DataJpaTest
 class UserRepositoryTest {
