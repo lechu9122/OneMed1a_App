@@ -1,0 +1,55 @@
+name: CI & SonarCloud
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # --- Build backend (Java) ---
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: '21'
+
+      - name: Cache Maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Maven package (produce target/classes)
+        working-directory: onemed1a-backend
+        run: mvn -B -DskipTests clean package
+
+      # --- Build frontend (JS/TS) ---
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: onemed1a-frontend/package-lock.json
+
+      - name: Install deps
+        working-directory: onemed1a-frontend
+        run: npm ci
+
+      - name: Test (coverage)
+        working-directory: onemed1a-frontend
+        run: npm test -- --coverage --watch=false || true
+
+      # --- SonarCloud scan (single run for both) ---
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
