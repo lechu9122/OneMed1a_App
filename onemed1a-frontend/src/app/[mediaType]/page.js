@@ -1,4 +1,3 @@
-import MediaNav from "@/components/MediaNavigation";
 import MediaGrid from "@/components/MediaGrid";
 import PropTypes from "prop-types";
 
@@ -28,10 +27,6 @@ export default function MediaPage({ params }) {
 
   return (
     <div className="p-4">
-      <nav className="flex justify-center gap-3 mb-6">
-        <MediaNav />
-      </nav>
-
       <MediaGrid items={items} />
     </div>
   );

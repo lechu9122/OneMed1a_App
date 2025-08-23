@@ -1,8 +1,7 @@
-// app/layout.js
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Logo from "@/components/Logo";
-import MediaNav from "@/components/MediaNav";
+import MediaNav from "@/components/MediaNavigation";
 import PropTypes from "prop-types";
 
 // Load font with selected weights
@@ -25,19 +24,16 @@ export default function RootLayout({ children }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-
-      <body className={`${poppins.variable} antialiased bg-white text-neutral-900`}>
+      <body
+        className={`${poppins.variable} antialiased bg-white text-neutral-900`}
+      >
         <header
           className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200 shadow-sm"
           role="banner"
           aria-label="Application Header"
         >
-          <div className="mx-auto max-w-7xl px-4 py-4 flex justify-center">
+          <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col items-center gap-4">
             <Logo />
-          </div>
-
-          {/* Sticky nav row under the logo */}
-          <div className="mx-auto max-w-7xl px-4 pb-3 flex justify-center">
             <MediaNav />
           </div>
         </header>
