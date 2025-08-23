@@ -1,4 +1,3 @@
-// app/layout.js
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Logo from "@/components/Logo";
@@ -25,29 +24,24 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${poppins.variable} antialiased bg-white text-neutral-900`}>
-        {/* Sticky LOGO only */}
-        <div
+        {/* Sticky logo only */}
+        <header
           className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200 shadow-sm"
-          role="banner"
           aria-label="Application Header"
         >
           <div className="mx-auto max-w-7xl px-4 py-4 flex justify-center">
             <Logo />
           </div>
-        </div>
+        </header>
 
-        {/* Non-sticky navigation & search */}
-        <nav
-          className="bg-white border-b border-neutral-200"
-          role="navigation"
-          aria-label="Media categories"
-        >
+        {/* Non-sticky navigation (no extra logo here) */}
+        <nav className="bg-white border-b border-neutral-200" aria-label="Media categories">
           <div className="mx-auto max-w-7xl px-4 py-3 flex justify-center">
             <MediaNavigation />
           </div>
         </nav>
 
-        <main id="main" role="main" className="min-h-screen">
+        <main id="main" className="min-h-screen">
           {children}
         </main>
       </body>

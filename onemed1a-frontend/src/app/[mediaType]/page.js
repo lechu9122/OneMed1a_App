@@ -40,7 +40,7 @@ export default async function MediaPage({ params, searchParams }) {
 
   return (
     <div className="p-4">
-      {/* Navigation is rendered in layout; do not render here */}
+
       <MediaGrid items={filtered} />
     </div>
   );

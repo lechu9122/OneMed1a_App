@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,13 +32,13 @@ export default function LoginPage() {
       const user = await response.json();
       console.log('Logged in user:', user);
 
-      
       router.push('/movies');
     } catch (err) {
       console.error(err);
       setError('Network error');
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
