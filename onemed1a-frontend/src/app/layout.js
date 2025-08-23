@@ -27,7 +27,6 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${poppins.variable} antialiased bg-white text-neutral-900`}>
-        {/* Sticky header: logo + nav */}
         <header
           className="sticky top-0 z-50 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b border-neutral-200 shadow-sm"
           role="banner"
