@@ -21,19 +21,32 @@ const mediaData = {
   ],
 };
 
-export default function MediaPage({ params }) {
-  const { mediaType } = params;
+export default async function MediaPage({ params, searchParams }) {
+  const { mediaType } = await params;
+
+  // In Next 15+, searchParams is a Promise<URLSearchParams>
+  const sp = await searchParams;
+  const qRaw = typeof sp?.get === "function" ? sp.get("q") : sp?.q;
+  const q = (qRaw || "").toString().trim().toLowerCase();
+
   const items = mediaData[mediaType] || [];
+  const filtered = q
+    ? items.filter((it) => {
+        const title = (it.title || "").toLowerCase();
+        const year = String(it.year || "");
+        return title.includes(q) || year.includes(q);
+      })
+    : items;
 
   return (
     <div className="p-4">
-      <MediaGrid items={items} />
+      {/* Navigation is rendered in layout; do not render here */}
+      <MediaGrid items={filtered} />
     </div>
   );
 }
 
 MediaPage.propTypes = {
-  params: PropTypes.shape({
-    mediaType: PropTypes.string.isRequired,
-  }).isRequired,
+  params: PropTypes.any,
+  searchParams: PropTypes.any,
 };
