@@ -4,12 +4,10 @@ import { usePathname } from "next/navigation";
 
 export default function MediaNav() {
   const pathname = usePathname();
-
   const tabs = [
     { name: "Movies", href: "/movies" },
     { name: "TV", href: "/tv" },
     { name: "Books", href: "/books" },
-    { name: "Games", href: "/games" },
     { name: "Audio", href: "/audio" },
   ];
 
