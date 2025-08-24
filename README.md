@@ -6,75 +6,108 @@
 
 ## What does this project do?
 
-**OneMed1a** is a social media and entertainment tracking web application that brings together users’ favorite forms of media—movies, TV shows, books, music, and podcasts—into a single, personalized discovery platform. It tracks what you're watching or reading, recommends what to enjoy next, and lets you share your activity with friends in real-time.
+This project is developed by **Team 32** as part of the **University of Auckland SOFTENG 310 (Software Engineering Project)** course.
+**OneMed1a** is a social and entertainment tracking web application that unifies users’ favorite media—movies, TV shows, books, and music—into one platform.
+
+It enables users to:
+- Track what they are watching, reading, or listening to
+- Generate intelligent, cross-media recommendations (e.g., “you read this book, here’s the movie adaptation”)
+- Connect with friends through a shared media activity feed
+- Explore mood-aware and socially driven suggestions
 
 ---
 
 ## Why is this project useful?
 
-Fragmented media platforms make it hard to keep track of everything we enjoy. OneMed1a solves this by:
+Fragmented media platforms make it difficult to manage all the content people consume. **OneMed1a** addresses this by:
 - Centralizing all media tracking in one place
-- Generating intelligent, mood-aware recommendations across different types of media
-- Creating a social feed of your and your friends’ media activity
-- Recommending content based on friends' top picks and shared interests
+- Recommending media across multiple domains (books to films, music to related shows, etc.)
+- Offering a social feed of media activity among friends
+- Suggesting top picks based on shared interests and friends’ ratings
 
-Whether you're a casual consumer or a media lover, OneMed1a helps you discover more of what you love—and connect with others who love it too.
+This project also supports the SOFTENG 310 learning outcomes:
+- Collaborative software development with GitHub
+- Clear documentation and workflows
+- Building maintainable and extensible software systems
 
 ---
 
 ## How do I get started?
 
 ### Prerequisites
-
-Before running the project locally, install the following:
-
+Install the following before setup:
 - [Node.js](https://nodejs.org/) (v18+)
-- [Java 17+](https://adoptium.net/)
+- [Java 21+](https://adoptium.net/)
 - [Maven](https://maven.apache.org/)
-- [Supabase CLI](https://supabase.com/docs/guides/cli) *(if using local DB for dev)*
+- [Docker](https://www.docker.com/) (for containerized PostgreSQL)
 - [Git](https://git-scm.com/)
 
-### Installation Steps
+### Setup Instructions
 
-1. **Clone the repository**  
-git clone https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App.git
-cd OneMed1a_App
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App.git
+   cd OneMed1a_App
+   ```
 
-2. **Set up the frontend (Next.js)**
-cd frontend
-npm install
-npm run dev
+2. **Run the database in Docker**
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Run the backend (Spring Boot)**
+   ```bash
+   cd onemed1a-backend
+   mvn spring-boot:run
+   ```
+
+4. **Run the frontend (Next.js)**
+   ```bash
+   cd ../onemed1a-frontend
+   npm install
+   npm run dev
+   ```
+
+5. **Run backend tests**
+   ```bash
+   cd onemed1a-backend
+   mvn test
+   ```
 
 
-3. **Set up the backend (Spring Boot)**
-cd ../backend
-./mvnw spring-boot:run
+## Technologies Used
 
-### How can the software be used? (License)
+Frontend: Next.js
+
+Backend: Java Spring Boot
+
+Database: PostgreSQL (containerized through Docker)
+
+APIs:
+
+TMDB (movies & TV shows, posters/backdrops)
+
+Google Books API (book metadata & covers)
+
+Spotify Web API (music & album covers)
+
+## License
+
 This project is licensed under the MIT License.
-You're free to use, modify, and distribute the project with proper attribution.
+You are free to use, modify, and distribute with proper attribution.
+See the LICENSE file for details.
 
-View the full license in LICENSE.
+## Help & Support
 
-### What versions are available?
-We follow Semantic Versioning.
+For support or project-related discussions, join our Discord:
+OneMed1a Discord
 
-Current Version: v1.0.0-alpha
+## Team
 
-Releases are documented in the Releases section.
+Developed by Team 32 — SOFTENG 310, University of Auckland
 
-### Where can I get more help?
-If you encounter any issues or have questions:
+**Members:**
 
-Check the Issues tab
-
-Open a new issue
-
-Start a discussion in GitHub Discussions
-
-For urgent help, contact the project maintainers listed below.
-
-### Team Members
 Arnav Bhatiani
 
 Dave Khadka
@@ -87,19 +120,4 @@ Leo Chu
 
 Harry Ma
 
-### Technologies Used
-Frontend: Next.js
-
-Backend: Spring Boot, Supabase
-
-Version Control: GitHub
-
-Project Management: Jira, Trello
-
-Database: PostgreSQL via Supabase
-
-API://////////////////////////
-
-"One platform. All media. Shared together."
-— OneMed1a Team
-
+***"One platform. All media. Shared together." — OneMed1a Team***
