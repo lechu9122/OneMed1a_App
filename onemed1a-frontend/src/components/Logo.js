@@ -12,7 +12,7 @@ export default function Logo() {
       href="/"
       className={`${poppins.className} text-5xl font-bold tracking-tight text-red-600 hover:text-blue-600 transition-colors`}
     >
-      allmedia
+      onemedia
     </Link>
   );
 }
