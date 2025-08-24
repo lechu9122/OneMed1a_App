@@ -115,17 +115,17 @@ function Card({ item }) {
           {!loaded && (
             <div className="h-full w-full animate-pulse bg-[color:var(--skeleton,#e5e7eb)]" aria-hidden="true" />
           )}
-          <Image
-            src={src}
-            alt=""
-            width={400}
-            height={600}
-            className={`h-full w-full object-cover ${loaded ? "block" : "hidden"}`}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-            onLoadingComplete={() => setLoaded(true)}
-            onError={() => {setSrc("/next.svg"); setLoaded(true);}}
-            priority={false}
-          />
+    <Image
+    src={src}
+  alt=""
+  width={400}
+  height={600}
+  className={`h-full w-full object-cover ${loaded ? "block" : "hidden"}`}
+  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+  onLoadingComplete={() => setLoaded(true)}
+  onError={() => { setSrc("/next.svg"); setLoaded(true); }}
+  priority={false}
+/>
         </div>
 
         <div
