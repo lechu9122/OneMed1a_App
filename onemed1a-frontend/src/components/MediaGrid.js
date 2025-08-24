@@ -94,7 +94,7 @@ export default function MediaGrid({ items, pageSize = DEFAULT_PAGE_SIZE }) {
 
 function Card({ item }) {
   const [loaded, setLoaded] = useState(false);
-  const [src, setSrc] = useState(item.coverUrl || "/placeholder.png");
+  const [src, setSrc] = useState(item.coverUrl || "/next.svg");
 
   const isHrefValid = typeof item.href === "string" && item.href.trim().length > 0;
 
@@ -117,18 +117,17 @@ function Card({ item }) {
           )}
           <Image
             src={src}
-            alt="" /* decorative; accessible label lives on wrapper */
+            alt=""
             width={400}
             height={600}
             className={`h-full w-full object-cover ${loaded ? "block" : "hidden"}`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
             onLoadingComplete={() => setLoaded(true)}
-            onError={() => setSrc("/placeholder.png")}
+            onError={() => {setSrc("/next.svg"); setLoaded(true);}}
             priority={false}
           />
         </div>
 
-        {/* Hover/focus overlay with white text */}
         <div
           className="
             pointer-events-none absolute inset-x-0 bottom-0
@@ -151,7 +150,6 @@ function Card({ item }) {
         </div>
       </div>
 
-      {/* spacing; content lives in overlay */}
       <div className="p-4 pt-3">
         <span className="sr-only">
           {item.title} {item.year ? `(${item.year})` : ""}
