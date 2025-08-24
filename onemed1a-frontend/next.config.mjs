@@ -1,14 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-      domains: [
-        "books.google.com", // allow Google Books covers
-        "image.tmdb.org",    // for TMDB images
-          "i.scdn.co" // For spotify music
-      ],
-    },
-  };
+  images: {
+    unoptimized: true,
+    domains: [
+      "image.tmdb.org",              // TMDB
+      "books.googleusercontent.com", // Google Books covers
+      "i.scdn.co",                   // Spotify
+    ],
+  },
+};
 
 export default nextConfig;
-
-

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import PropTypes from "prop-types";
 
@@ -94,9 +93,10 @@ export default function MediaGrid({ items, pageSize = DEFAULT_PAGE_SIZE }) {
 
 function Card({ item }) {
   const [loaded, setLoaded] = useState(false);
-  const [src, setSrc] = useState(item.coverUrl || "/placeholder.png");
+  const [src, setSrc] = useState(item.coverUrl || "/next.svg");
 
-  const isHrefValid = typeof item.href === "string" && item.href.trim().length > 0;
+  const hasHref = typeof item.href === "string" && item.href.trim().length > 0;
+  const targetHref = hasHref ? item.href : `/collection/${item.type}/${item.id}`;
 
   const wrapperClasses =
     "block min-h-[44px] min-w-[44px] overflow-hidden group " +
@@ -109,26 +109,25 @@ function Card({ item }) {
     "active:scale-[0.99] motion-safe:transition-transform";
 
   const content = (
-    <Link href={`/collection/${item.type}/${item.id}`}>
+    <>
       <div className="relative w-full">
         <div className="aspect-[2/3] w-full overflow-hidden rounded-t-xl">
           {!loaded && (
             <div className="h-full w-full animate-pulse bg-[color:var(--skeleton,#e5e7eb)]" aria-hidden="true" />
           )}
-          <Image
+
+          {/* Use a plain <img> to guarantee painting in dev */}
+          <img
             src={src}
-            alt="" /* decorative; accessible label lives on wrapper */
+            alt=""
             width={400}
             height={600}
             className={`h-full w-full object-cover ${loaded ? "block" : "hidden"}`}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
             onLoad={() => setLoaded(true)}
-            onError={() => setSrc("/placeholder.png")}
-            priority={false}
+            onError={() => { setSrc("/next.svg"); setLoaded(true); }}
           />
         </div>
 
-        {/* Hover/focus overlay with white text */}
         <div
           className="
             pointer-events-none absolute inset-x-0 bottom-0
@@ -151,23 +150,23 @@ function Card({ item }) {
         </div>
       </div>
 
-      {/* spacing; content lives in overlay */}
       <div className="p-4 pt-3">
         <span className="sr-only">
           {item.title} {item.year ? `(${item.year})` : ""}
         </span>
       </div>
-    </Link>
+    </>
   );
 
-  return isHrefValid ? (
-    <Link href={item.href} aria-label={`${item.title}${item.year ? ` (${item.year})` : ""}`} className={wrapperClasses}>
+  // Wrap exactly once (no nested links)
+  return (
+    <Link
+      href={targetHref}
+      aria-label={`${item.title}${item.year ? ` (${item.year})` : ""}`}
+      className={wrapperClasses}
+    >
       {content}
     </Link>
-  ) : (
-    <button type="button" aria-label={item.title} className={wrapperClasses}>
-      {content}
-    </button>
   );
 }
 
