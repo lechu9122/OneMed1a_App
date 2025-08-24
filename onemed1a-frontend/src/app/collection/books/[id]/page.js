@@ -3,49 +3,38 @@ import { notFound } from "next/navigation";
 import BackgroundImage from "@/app/media-details-components/BackgroundImage";
 import PosterImage from "@/app/media-details-components/PosterImage";
 import StarRating from "@/app/media-details-components/StarRating";
-import MediaActionButtons from "@/app/media-details-components/MediaActionButtons";
+import CollectionDropdown from "@/app/media-details-components/CollectionDropdown";
 import Divider from "@/app/media-details-components/Divider";
-
-/** -------------------------------------------------------
- * Toggle placeholder rendering:
- *  - true  = always show the placeholder book below
- *  - false = fetch real data from backend (requires API env)
- * ------------------------------------------------------ */
-const USE_PLACEHOLDER = true;
-
-// const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { getMediaById } from "@/api/mediaClient";
+import {cookies} from "next/headers";
+import {getStatus} from "@/api/mediaAPI";
 
 async function getBook(id) {
-    if (USE_PLACEHOLDER) {
-        return {
-            mediaId: "book-placeholder-id",
-            externalMediaId: "ISBN_9780547928227",
-            type: "BOOKS",
-            title: "The Hobbit",
-            authors: ["J. R. R. Tolkien"],
-            releaseDate: "1937",            // publish year
-            publisher: "George Allen & Unwin",
-            pageCount: 310,
-            isbn: "978-0547928227",
-            genres: ["Fantasy", "Adventure"],
-            description:
-                "Bilbo Baggins, a comfort-loving hobbit, is whisked away on a quest to reclaim a lost Dwarven kingdom from the dragon Smaug. Along the way he discovers courage, wit, and a mysterious ring that will shape Middle-earth’s fate.",
-            posterUrl: "/book-cover.jpg",      // replace with your asset/remote URL
-            backdropUrl: "/book-backdrop.jpg", // replace with your asset/remote URL
-            createdAt: new Date().toISOString(),
-            rating: 4.8,
-        };
+    try {
+        const book = await getMediaById(id);
+        return book;
+    } catch (error) {
+        console.error("Error fetching book:", error);
+        return null;
     }
+}
 
-    // const res = await fetch(`${API_BASE}/media/${id}`, { cache: "no-store" });
-    // if (res.status === 404) return null;
-    // if (!res.ok) throw new Error("Failed to fetch book");
-    // return res.json();
+async function getMediaStatus(userId, mediaId) {
+    try {
+        return await getStatus(userId, mediaId);
+    } catch (error) {
+        console.log("Not in collection");
+        return null;
+    }
 }
 
 export default async function BookPage({ params }) {
-    const book = await getBook(params.id);
+    const { id } = await params;
+    const userId = (await cookies()).get('userId')?.value;
+
+    const book = await getBook(id);
     if (!book) notFound();
+    const result = await getMediaStatus(userId, id);
 
     return (
         <main className="min-h-screen bg-gray-100 text-gray-900">
@@ -131,8 +120,15 @@ export default async function BookPage({ params }) {
 
                 <Divider />
 
-                <MediaActionButtons secondaryLabel="Plan to Read" />
-            </div>
+                 <div className="mt-4">
+                     <CollectionDropdown
+                         currentStatus={result === null ? "UNSPECIFIED" : result.status}
+                         userId={userId}
+                         mediaId={book.mediaId}
+                         mediaType={book.type}
+                     />
+                           </div>
+                         </div>
         </main>
     );
 }

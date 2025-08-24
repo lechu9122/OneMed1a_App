@@ -80,8 +80,8 @@ export default function MediaGrid({ items, pageSize = DEFAULT_PAGE_SIZE }) {
           const colKey = `col-${ci}-${firstId}-${lastId}-${col.length}`;
           return (
             <div key={colKey} className="flex flex-col gap-4">
-              {col.map((item) => (
-                <Card key={item.id} item={item} />
+              {col.map((item, idx) => (
+                <Card key={`${ci}-${idx}-${item.id}`} item={item} />
               ))}
             </div>
           );
@@ -96,7 +96,12 @@ function Card({ item }) {
   const [loaded, setLoaded] = useState(false);
   const [src, setSrc] = useState(item.coverUrl || "/next.svg");
 
-  const isHrefValid = typeof item.href === "string" && item.href.trim().length > 0;
+  // Prefer explicit href; otherwise build a default collection link when type is present
+  const computedHref =
+    (typeof item.href === "string" && item.href.trim().length > 0 && item.href) ||
+    (item.type ? `/collection/${item.type}/${item.id}` : null);
+
+  const isHrefValid = typeof computedHref === "string" && computedHref.trim().length > 0;
 
   const wrapperClasses =
     "block min-h-[44px] min-w-[44px] overflow-hidden group " +
@@ -113,21 +118,25 @@ function Card({ item }) {
       <div className="relative w-full">
         <div className="aspect-[2/3] w-full overflow-hidden rounded-t-xl">
           {!loaded && (
-            <div className="h-full w-full animate-pulse bg-[color:var(--skeleton,#e5e7eb)]" aria-hidden="true" />
+            <div
+              className="h-full w-full animate-pulse bg-[color:var(--skeleton,#e5e7eb)]"
+              aria-hidden="true"
+            />
           )}
           <Image
             src={src}
-            alt=""
+            alt="" /* decorative; accessible label lives on wrapper */
             width={400}
             height={600}
             className={`h-full w-full object-cover ${loaded ? "block" : "hidden"}`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
             onLoadingComplete={() => setLoaded(true)}
-            onError={() => {setSrc("/next.svg"); setLoaded(true);}}
+            onError={() => setSrc("/placeholder.png")}
             priority={false}
           />
         </div>
 
+        {/* Hover/focus overlay with white text */}
         <div
           className="
             pointer-events-none absolute inset-x-0 bottom-0
@@ -150,6 +159,7 @@ function Card({ item }) {
         </div>
       </div>
 
+      {/* spacing; content lives in overlay */}
       <div className="p-4 pt-3">
         <span className="sr-only">
           {item.title} {item.year ? `(${item.year})` : ""}
@@ -158,8 +168,13 @@ function Card({ item }) {
     </>
   );
 
+  // Single wrapper: Link when we have an href, otherwise a button
   return isHrefValid ? (
-    <Link href={item.href} aria-label={`${item.title}${item.year ? ` (${item.year})` : ""}`} className={wrapperClasses}>
+    <Link
+      href={computedHref}
+      aria-label={`${item.title}${item.year ? ` (${item.year})` : ""}`}
+      className={wrapperClasses}
+    >
       {content}
     </Link>
   ) : (
