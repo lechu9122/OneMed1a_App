@@ -6,12 +6,7 @@
 
 ## What does this project do?
 
-<<<<<<< Updated upstream
 **OneMed1a** is a social media and entertainment tracking web application that brings together users’ favorite forms of media—movies, TV shows, books, music, and podcasts—into a single, personalized discovery platform. It tracks what you're watching or reading, recommends what to enjoy next, and lets you share your activity with friends in real-time.
-=======
-**OneMed1a** is a social media and entertainment tracking web application that brings together users’ favorite forms of media—movies, TV shows, books, music, and podcasts—into a single, personalized discovery platform.  
-It tracks what you're watching or reading, recommends what to enjoy next, and lets you share your activity with friends in real-time.
->>>>>>> Stashed changes
 
 ---
 
@@ -36,18 +31,8 @@ Before running the project locally, install the following:
 - [Node.js](https://nodejs.org/) (v18+)
 - [Java 17+](https://adoptium.net/)
 - [Maven](https://maven.apache.org/)
-- [Supabase CLI](https://supabase.com/docs/guides/cli) *(if using local DB for dev)*
+- [Supabase CLI](https://supabase.com/docs/guides/cli)
 - [Git](https://git-scm.com/)
-
-<<<<<<< Updated upstream
-### Installation Steps
-
-1. **Clone the repository**  
-git clone https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App.git
-cd OneMed1a_App
-
-=======
----
 
 ### Installation Steps
 
@@ -55,153 +40,77 @@ cd OneMed1a_App
 git clone https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App.git
 cd OneMed1a_App
 
-markdown
-Copy
-Edit
-
->>>>>>> Stashed changes
 2. **Set up the frontend (Next.js)**
 cd frontend
 npm install
 npm run dev
 
-<<<<<<< Updated upstream
-=======
-markdown
-Copy
-Edit
->>>>>>> Stashed changes
 
 3. **Set up the backend (Spring Boot)**
 cd ../backend
 ./mvnw spring-boot:run
 
-<<<<<<< Updated upstream
-### How can the software be used? (License)
-This project is licensed under the MIT License.
-You're free to use, modify, and distribute the project with proper attribution.
-
-View the full license in LICENSE.
-
-### What versions are available?
-We follow Semantic Versioning.
-
-Current Version: v1.0.0-alpha
-
-Releases are documented in the Releases section.
-
-### Where can I get more help?
-If you encounter any issues or have questions:
-
-Check the Issues tab
-
-Open a new issue
-
-Start a discussion in GitHub Discussions
-
-For urgent help, contact the project maintainers listed below.
-
-### Team Members
-Arnav Bhatiani
-
-Dave Khadka
-
-Joe Nguyen
-
-Jake Kim
-
-Leo Chu
-
-Harry Ma
-
-### Technologies Used
-Frontend: Next.js
-
-Backend: Spring Boot, Supabase
-
-Version Control: GitHub
-
-Project Management: Jira, Trello
-
-Database: PostgreSQL via Supabase
-
-API://////////////////////////
-
-"One platform. All media. Shared together."
-— OneMed1a Team
-
-=======
-yaml
-Copy
-Edit
-
----
-
 ## APIs Used
 
 OneMed1a integrates with the following third-party APIs for media data and images:
 
-- TV Shows & Movies Posters → [TMDB API](https://www.themoviedb.org/documentation/api)  
-- Book Covers → [Google Books API](https://developers.google.com/books)  
-- Music Covers → [Spotify Web API](https://developer.spotify.com/documentation/web-api/)  
+- TV Shows & Movies Posters → [TMDB API](https://www.themoviedb.org/documentation/api)
+- Book Covers → [Google Books API](https://developers.google.com/books)
+- Music Covers → [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
 
-API keys should be configured in:  
-- Frontend (Next.js) → `.env.local`  
-- Backend (Spring Boot) → `application.properties`  
+API keys should be configured in:
+- Frontend (Next.js) → `.env.local`
+- Backend (Spring Boot) → `application.properties`
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.  
-You're free to use, modify, and distribute the project with proper attribution.  
+This project is licensed under the MIT License.
+You're free to use, modify, and distribute the project with proper attribution.
 
-View the full license in [LICENSE](LICENSE).  
+View the full license in [LICENSE](LICENSE).
 
 ---
 
 ## Versions
 
-We follow Semantic Versioning.  
+We follow Semantic Versioning.
 
-- Current Version: `v1.0.0-alpha`  
-- Releases are documented in the Releases section.  
+- Current Version: `v1.0.0-alpha`
+- Releases are documented in the Releases section.
 
 ---
 
 ## Where can I get more help?
 
 If you encounter any issues or have questions:
-- Check the Issues tab  
-- Open a new issue  
-- Start a discussion in GitHub Discussions  
-- Join our community on [Discord](https://discord.gg/rsDuRvQuPN)  
-
-For urgent help, contact the project maintainers listed below.  
+- Check the Issues tab
+- Open a new issue
+- Start a discussion in GitHub Discussions
 
 ---
 
 ## Team Members
 
-- Arnav Bhatiani  
-- Dave Khadka  
-- Joe Nguyen  
-- Jake Kim  
-- Leo Chu  
-- Harry Ma  
+- Arnav Bhatiani
+- Dave Khadka
+- Joe Nguyen
+- Jake Kim
+- Leo Chu
+- Harry Ma
 
 ---
 
 ## Technologies Used
 
-- Frontend: Next.js  
-- Backend: Spring Boot, Supabase  
-- Database: PostgreSQL via Supabase  
-- Version Control: GitHub  
-- Project Management: Jira, Trello  
+- Frontend: Next.js
+- Backend: Spring Boot, Supabase
+- Database: PostgreSQL via Supabase
+- Version Control: GitHub
+- Project Management: Jira, Trello
 
 ---
 
-"One platform. All media. Shared together."  
+"One platform. All media. Shared together."
 — OneMed1a Team
->>>>>>> Stashed changes
