@@ -3,21 +3,17 @@ package com.onemed1a.backend.usermediastatus;
 
 import java.util.List;
 import java.util.UUID;
-import java.net.URI;
-import java.util.Optional;
 
 import com.onemed1a.backend.usermediastatus.dto.UserMediaStatusDTO;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.onemed1a.backend.media.MediaData;
-import com.onemed1a.backend.media.MediaDataRepository;
+import com.onemed1a.backend.usermediastatus.UserMediaStatus;
 
 @RestController
-@RequestMapping("/usermedia")
+@RequestMapping("/api/v1/usermedia")
 public class UserMediaStatusController {
 
     private final UserMediaStatusService userMediaService;
@@ -48,9 +44,15 @@ public class UserMediaStatusController {
     //Delete method to delete the status of a media item for the logged in user
     @DeleteMapping("/{statusId}/")
     public ResponseEntity<UUID> deleteUserMediaStatus(@PathVariable ("statusId") UUID statusId) {
-         userMediaService.delete(statusId);
-         return ResponseEntity.ok(statusId);
+        userMediaService.delete(statusId);
+        return ResponseEntity.ok(statusId);
+    }
 
+    @GetMapping("/{userId}/{mediaId}")
+    public ResponseEntity<UserMediaStatus> getStatus(
+            @PathVariable UUID userId,
+            @PathVariable UUID mediaId) {
+        return userMediaService.getStatus(userId, mediaId);
     }
 
 }

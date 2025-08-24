@@ -1,60 +1,43 @@
 // app/tvshows/[id]/page.js
-import { notFound } from "next/navigation";
+import {notFound} from "next/navigation";
 import BackgroundImage from "@/app/media-details-components/BackgroundImage";
 import PosterImage from "@/app/media-details-components/PosterImage";
 import StarRating from "@/app/media-details-components/StarRating";
-import MediaActionButtons from "@/app/media-details-components/MediaActionButtons";
 import Divider from "@/app/media-details-components/Divider";
-
-/** -------------------------------------------------------
- * Toggle placeholder rendering:
- *  - true  = always show the placeholder TV show below
- *  - false = fetch real data from backend (requires API env)
- * ------------------------------------------------------ */
-const USE_PLACEHOLDER = true;
-
-// const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+import {getMediaById} from "@/api/mediaClient";
+import {cookies} from "next/headers";
+import CollectionDropdown from "@/app/media-details-components/CollectionDropdown";
+import {getStatus} from "@/api/mediaAPI";
 
 async function getTvShow(id) {
-    if (USE_PLACEHOLDER) {
-        return {
-            mediaId: "tv-placeholder-id",
-            externalMediaId: "119051",
-            type: "TV",
-            title: "Wednesday",
-            firstAirYear: "2022",
-            seasons: 1,
-            episodes: 8,
-            network: "Netflix",
-            genres: ["Mystery", "Comedy", "Fantasy"],
-            description:
-                "Smart, sarcastic, and a little dead inside, Wednesday Addams investigates mysteries at Nevermore Academy while navigating new friendships and old grudges.",
-            posterUrl: "/tv-poster.jpg",     // replace with your asset or remote URL
-            backdropUrl: "/tv-backdrop.jpg", // replace with your asset or remote URL
-            createdAt: new Date().toISOString(),
-            rating: 4.6,
-            cast: [
-                "Jenna Ortega (Wednesday)",
-                "Emma Myers (Enid)",
-                "Gwendoline Christie (Larissa Weems)",
-                "Luis Guzmán (Gomez)"
-            ],
-        };
+        try {
+            return await getMediaById(id);
+    } catch (error) {
+        console.error("Error fetching TV Show:", error);
+        return null;
     }
-
-    // const res = await fetch(`${API_BASE}/media/${id}`, { cache: "no-store" });
-    // if (res.status === 404) return null;
-    // if (!res.ok) throw new Error("Failed to fetch TV show");
-    // return res.json();
 }
 
-export default async function TvShowPage({ params }) {
-    const show = await getTvShow(params.id);
+async function getMediaStatus(userId, mediaId) {
+    try {
+        return await getStatus(userId, mediaId);
+    } catch (error) {
+    console.log("Not in collection");
+    return null;
+    }
+}
+
+export default async function TvShowPage({ params}) {
+    const { id } = await params;
+    const userId = (await cookies()).get('userId')?.value;
+
+    const show = await getTvShow(id);
     if (!show) notFound();
+    const result = await getMediaStatus(userId, id);
 
     return (
         <main className="min-h-screen bg-gray-100 text-gray-900">
-            <BackgroundImage src={show.backdropUrl} alt={`${show.title} backdrop`} />
+            <BackgroundImage src={`https://image.tmdb.org/t/p/w780${show.backdropUrl}`} alt={`${show.title} backdrop`} />
 
             <div className="mx-auto w-full max-w-6xl px-4 pb-20">
                 {/* Back button */}
@@ -72,7 +55,7 @@ export default async function TvShowPage({ params }) {
                     {/* Poster */}
                     <div className="flex-shrink-0 lg:w-80">
                         <PosterImage
-                            src={show.posterUrl}
+                            src={`https://image.tmdb.org/t/p/w780${show.posterUrl}`}
                             alt={`${show.title} poster`}
                             className="w-full lg:w-80 rounded-lg"
                         />
@@ -139,8 +122,16 @@ export default async function TvShowPage({ params }) {
 
                 <Divider />
 
-                <MediaActionButtons />
-            </div>
+                <div className="mt-4">
+                    <CollectionDropdown
+                        currentStatus={result === null ? "UNSPECIFIED" : result.status}
+                        userId={userId}
+                        mediaId={show.mediaId}
+                        mediaType={show.type}
+                    />
+                        </div>
+                      </div>
         </main>
     );
 }
+

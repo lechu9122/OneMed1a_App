@@ -1,7 +1,6 @@
 package com.onemed1a.backend.usermediastatus;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.onemed1a.backend.media.MediaData;
@@ -76,31 +75,33 @@ public class UserMediaStatusService {
         MediaData mediaData = mediaDataRepository.findById(mediaId)
                 .orElseThrow(() -> new IllegalArgumentException("Media not found: " + mediaId));
 
-        // Try to find an existing row for userId, mediaId
-        Optional<UserMediaStatus> existingOpt = userMediaStatusRepository.findById(id);
-
         UserMediaStatus ums;
 
-        if (existingOpt.isPresent()) {
-            // UPDATE path
-            ums = existingOpt.get();
-            ums.setStatus(status);
-            if (rating != null) ums.setRating(rating);
-            if (reviewText != null) ums.setReviewText(reviewText);
-            // updatedAt will be set by @PreUpdate on save
+        if (id != null) {
+            // UPDATE by id
+            ums = userMediaStatusRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Status not found: " + id));
         } else {
-            // CREATE path
-            ums = UserMediaStatus.builder()
-                    .user(user)
-                    .media(mediaData)
-                    .status(status)
-                    .rating(rating)
-                    .reviewText(reviewText)
-                    .build();
-            // createdAt/updatedAt handled by @PrePersist
+            // UPSERT by (user, media)
+            ums = userMediaStatusRepository
+                    .findByUser_IdAndMedia_MediaId(userId, mediaId)
+                    .orElse(UserMediaStatus.builder().
+                            user(user).
+                            media(mediaData).
+                            status(status).
+                            rating(rating).
+                            reviewText(reviewText).
+                            build());
         }
 
         return ResponseEntity.ok().body(userMediaStatusRepository.save(ums));
+    }
+
+    public ResponseEntity<UserMediaStatus> getStatus(UUID userId, UUID mediaId) {
+        return userMediaStatusRepository
+                .findByUser_IdAndMedia_MediaId(userId, mediaId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 

@@ -1,12 +1,13 @@
 name: CI & SonarCloud
+
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ main ]   # only run on main pushes
 
 jobs:
   sonar:
+    # extra safety: ensure it's a push to main
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

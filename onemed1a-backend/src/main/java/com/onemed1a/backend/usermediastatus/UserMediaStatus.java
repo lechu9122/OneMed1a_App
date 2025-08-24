@@ -1,5 +1,7 @@
 package com.onemed1a.backend.usermediastatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.onemed1a.backend.media.MediaData;
 import com.onemed1a.backend.user.User;
 import jakarta.persistence.*;
@@ -24,10 +26,14 @@ public class UserMediaStatus {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    // Don't serialize lazy user proxy
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // Ignore Hibernate proxy internals when serializing media
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "media_id", nullable = false)
     private MediaData media;

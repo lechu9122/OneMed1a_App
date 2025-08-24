@@ -1,60 +1,40 @@
 // app/music/[id]/page.js
-import { notFound } from "next/navigation";
+import {notFound} from "next/navigation";
 import BackgroundImage from "@/app/media-details-components/BackgroundImage";
 import PosterImage from "@/app/media-details-components/PosterImage";
 import StarRating from "@/app/media-details-components/StarRating";
-import MediaActionButtons from "@/app/media-details-components/MediaActionButtons";
+
 import Divider from "@/app/media-details-components/Divider";
+import {getMediaById} from "@/api/mediaClient";
+import {cookies} from "next/headers";
+import CollectionDropdown from "@/app/media-details-components/CollectionDropdown";
+import {getStatus} from "@/api/mediaAPI";
 
-/** -------------------------------------------------------
- * Toggle placeholder rendering:
- *  - true  = always show the placeholder album below
- *  - false = fetch real data from backend (requires API env)
- * ------------------------------------------------------ */
-const USE_PLACEHOLDER = true;
-
-// const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-async function getMusic(id) {
-    if (USE_PLACEHOLDER) {
-        return {
-            mediaId: "music-placeholder-id",
-            externalMediaId: "fake-album-042",
-            type: "MUSIC",
-            title: "Aurora Echoes",
-            artists: ["Midnight Static", "Luna Verse"], // fake artists
-            releaseDate: "2024",
-            duration: "48 min",
-            label: "Nebula Fields",
-            genres: ["Synthwave", "Dream Pop"],
-            description:
-                "An atmospheric concept album that drifts between city lights and stargazed silence, blending shimmering pads, soft vocals, and analog pulses.",
-            posterUrl: "/backdrop.JPG",      // your local placeholder asset
-            backdropUrl: "/poster.JPG",    // your local placeholder asset
-            createdAt: new Date().toISOString(),
-            rating: 4.5,
-            tracks: [
-                { no: 1, title: "Neon Lullaby", length: "3:42" },
-                { no: 2, title: "Saturn’s Carousel", length: "4:10" },
-                { no: 3, title: "Polaris Bloom", length: "5:01" },
-                { no: 4, title: "Velvet Orbit", length: "4:26" },
-                { no: 5, title: "Moonlit Transit", length: "3:58" },
-                { no: 6, title: "Glass Comet", length: "4:45" },
-                { no: 7, title: "Afterlight Garden", length: "5:37" },
-                { no: 8, title: "Echoes of Aurora", length: "6:12" },
-            ],
-        };
+async function getAlbum(id) {
+    try {
+        return await getMediaById(id);
+    } catch (error) {
+        console.error("Error fetching song:", error);
+        return null;
     }
+}
 
-    // const res = await fetch(`${API_BASE}/media/${id}`, { cache: "no-store" });
-    // if (res.status === 404) return null;
-    // if (!res.ok) throw new Error("Failed to fetch album");
-    // return res.json();
+async function getMediaStatus(userId, mediaId) {
+    try {
+        return await getStatus(userId, mediaId);
+    } catch (error) {
+        console.log("Not in collection");
+        return null;
+    }
 }
 
 export default async function MusicPage({ params }) {
-    const album = await getMusic(params.id);
+    const { id } = await params;
+    const userId = (await cookies()).get('userId')?.value;
+
+    const album = await getAlbum(id);
     if (!album) notFound();
+    const result = await getMediaStatus(userId, id);
 
     return (
         <main className="min-h-screen bg-gray-100 text-gray-900">
@@ -157,8 +137,15 @@ export default async function MusicPage({ params }) {
 
                 <Divider />
 
-                <MediaActionButtons primaryLabel="Listen Now" secondaryLabel="Bookmark" />
-            </div>
+                <div className="mt-4">
+                    <CollectionDropdown
+                        currentStatus={result === null ? "UNSPECIFIED" : result.status}
+                        userId={userId}
+                        mediaId={album.mediaId}
+                        mediaType={album.type}
+                        />
+                        </div>
+                      </div>
         </main>
     );
 }
