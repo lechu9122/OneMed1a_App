@@ -6,7 +6,7 @@
 
 ## What does this project do?
 
-This project is developed by **Team 32** as part of the **University of Auckland SOFTENG 310 (Software Engineering Project)** course.
+This project is developed by **Team 4** as part of the **University of Auckland SOFTENG 310 (Software Engineering Project)** course.
 **OneMed1a** is a social and entertainment tracking web application that unifies users’ favorite media—movies, TV shows, books, and music—into one platform.
 
 It enables users to:
@@ -91,6 +91,8 @@ Google Books API (book metadata & covers)
 
 Spotify Web API (music & album covers)
 
+OpenAi (cross-media reccomendation)
+
 ## License
 
 This project is licensed under the MIT License.
@@ -100,11 +102,11 @@ See the LICENSE file for details.
 ## Help & Support
 
 For support or project-related discussions, join our Discord:
-OneMed1a Discord
+[Onemed1a](https://discord.gg/PdfgCVZQ)
 
 ## Team
 
-Developed by Team 32 — SOFTENG 310, University of Auckland
+Developed by Team 4 — SOFTENG 310, University of Auckland
 
 **Members:**
 
