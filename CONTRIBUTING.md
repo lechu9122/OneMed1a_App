@@ -17,12 +17,19 @@ If you find a bug:
 ## Submitting a Pull Request
 1. **Check** existing [pull requests](https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App/pulls) to avoid duplicates.
 2. If not found:
-   - Make your changes in a new git branch:
-
+    - First, make a fork of the main repository
+  
+    - After you have made a fork, clone it to your local machine then set upstream to the main repository
+      ```shell
+      git remote add upstream https://github.com/ORIGINAL_OWNER/REPO_NAME.git
+      ```
+    - Make your changes in a new git branch:
       ```shell
       git checkout -b my-fix-branch main
       ```
     - Make sure to test your code and ensure it works and nothing else breaks.
+  
+    - **Before you commit any changes, make sure not to include the API keys in application.properties**
    
     - Commit your changes with a descriptive commit message:
   
@@ -37,9 +44,51 @@ If you find a bug:
       ```
 
     - In GitHub, send a pull request to `OneMed1a:main`.
+  
+    - When creating a pull request, make sure to include a short descriptive title and reference the issue it is addressing in the body.
 
 ## Environment set up and running tests
-**TO BE COMPLETED**
+   ### Backend setup
+   - Install Java version 21
+   - Install Maven
+   - Install Docker (container for postgres)
+
+   ### Frontend setup
+   - Install Node.js version 18 +
+
+   ### IDE Extensions
+   - Install SonarQube extension
+
+   ### API Keys
+   - Make sure to put all the API keys in onemed1a-backend/src/main/resources/application.properties
+
+   Once you have installed all the required software, first run the database through docker in the root folder
+
+   ```shell
+      docker compose up -d
+   ```
+
+   After you have the database running on docker, run the sprintboot backend
+
+   ```shell
+      cd onemed1a-backend
+      mvn spring-boot:run
+   ```
+
+   Once you have all the backend running switch to the frontend server and run the frontend
+   
+   ```shell
+      cd onemed1a-frontend
+      npm install
+      npm run dev
+   ```
+
+   To run backend tests switch to the backend folder, then run the following command
+
+   ```shell
+      cd onemed1a-backend
+      mvn test
+   ```
   
 ## Contributions we welcome
 ### We are looking for:
@@ -64,8 +113,6 @@ and start working on any issues labeled with "good first issue".
 
 ### Backend:
   - Java SpringBoot
-  - Supabase
-  - postgreSQL
 
 ## Project vision & roadmap
 `OneMed1a` aims to develop a unified web application that aggregates movies, TV shows, books,
@@ -81,7 +128,6 @@ place, transforming fragmented media browsing into a cohesive, socially driven e
    - TV Shows
    - Music
    - Books / Ebooks
-   - Podcasts
 2. Recommendation features:
    - Cross-media recommendation features using user’s taste from their data.
 3. Tracking of watched/watching media
@@ -105,18 +151,21 @@ place, transforming fragmented media browsing into a cohesive, socially driven e
 ### Backend
   - Java SpringBoot
 ### Database
-  - postgreSQL
+  - Postgres (containerized through Docker)
 ### User authentication
-  - Supabase
+  - Up to whoever is implementing's choice
 ### APIs
   - OpenAI
-  - ??? more when we find out
+  - TMDB
+  - Spotify web API
+  - Google Books API
 
 ## Project ground rules
 To ensure consistency throughout the source code, keep the following rules while you are working:
   - All features or bug fixes **Must be tested** by one or more tests.
   - All classes and methods **Must be documented**.
   - Follow the [code of conduct](CODE_OF_CONDUCT.md).
+  - NEVER commit API keys in application.properties.
 
 ## How contributors should get in touch
 Join the discord: https://discord.gg/rsDuRvQuPN
